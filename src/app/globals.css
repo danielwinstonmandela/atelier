@@ -1,0 +1,98 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Sohne";
+  src: url("/fonts/soehne-var.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Sohne";
+  src: url("/fonts/soehne-buch.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Sohne";
+  src: url("/fonts/soehne-kraftig.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Sohne";
+  src: url("/fonts/soehne-halbfett.woff2") format("woff2");
+  font-weight: 600 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 4%;
+    --card: 0 0% 98%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 40%;
+    --border: 0 0% 88%;
+    --primary: 0 0% 4%;
+    --primary-foreground: 0 0% 100%;
+    --destructive: 6 62% 42%;
+    --font-sans: "Sohne", "Inter", var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 94%;
+    --card: 0 0% 7%;
+    --muted: 0 0% 8.6%;
+    --muted-foreground: 0 0% 54%;
+    --border: 0 0% 18%;
+    --primary: 0 0% 94%;
+    --primary-foreground: 0 0% 4%;
+    --destructive: 6 62% 42%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-background font-sans text-foreground antialiased;
+    transition: background-color 160ms ease, color 160ms ease;
+    font-feature-settings: "ss01", "cv11";
+  }
+
+  ::selection {
+    background: hsl(var(--foreground));
+    color: hsl(var(--background));
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-foreground/60 ring-offset-2 ring-offset-background;
+  }
+}
+
+@layer components {
+  .eyebrow {
+    @apply text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground;
+  }
+  .display {
+    @apply font-sans font-normal leading-[1.02] tracking-[-0.025em];
+  }
+  /* Soft "paper" tile that clothing photos sit on, so cut-outs and photos feel consistent */
+  .tile {
+    @apply relative overflow-hidden rounded-lg border border-border/70 bg-card;
+  }
+}
