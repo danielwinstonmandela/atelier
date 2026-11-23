@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { OutfitBuilder } from "@/components/outfit-builder";
-import { getOutfits, getWardrobe } from "@/lib/data";
+import { ensureOwnWardrobe, getOutfits, getWardrobe } from "@/lib/data";
 import { createClient } from "@/lib/supabase/server";
 import { UUID_RE } from "@/lib/storage-paths";
 
@@ -13,6 +13,8 @@ export default async function OutfitPage({ params }: { params: Promise<{ id: str
   if (!UUID_RE.test(id)) notFound();
 
   const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (user) await ensureOwnWardrobe(supabase, user.id);
   const [wardrobe, outfits] = await Promise.all([getWardrobe(supabase), getOutfits(supabase, id)]);
   const outfit = outfits[0];
   if (!outfit) notFound();

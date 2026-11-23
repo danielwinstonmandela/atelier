@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { AddItemForm } from "@/components/add-item-form";
 import { createClient } from "@/lib/supabase/server";
-import { getWardrobeContext } from "@/lib/data";
+import { ensureOwnWardrobe, getWardrobeContext } from "@/lib/data";
 
 export const metadata: Metadata = { title: "Add item" };
 
@@ -12,7 +12,8 @@ export default async function AddItemPage() {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
-  const wardrobe = await getWardrobeContext(supabase);
+  let wardrobe = await getWardrobeContext(supabase);
+  if (!wardrobe) wardrobe = await ensureOwnWardrobe(supabase, user.id);
   if (wardrobe?.role !== "owner") redirect("/");
   return <AddItemForm userId={user.id} />;
 }

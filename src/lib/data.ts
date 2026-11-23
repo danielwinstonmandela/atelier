@@ -55,7 +55,7 @@ export async function ensureOwnWardrobe(supabase: SupabaseClient, userId: string
 
   const { data, error } = await supabase
     .from("wardrobes")
-    .insert({ owner_id: userId, name: "My wardrobe" })
+    .insert({ owner_id: userId, name: "My archive" })
     .select("id, owner_id, name")
     .single();
   if (error || !data) throw new Error("Could not create your wardrobe.");

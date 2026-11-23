@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { AppHeader } from "@/components/app-header";
 import { SetupNotice } from "@/components/setup-notice";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
-import { getWardrobeContext } from "@/lib/data";
+import { ensureOwnWardrobe, getWardrobeContext } from "@/lib/data";
 import { SiteFooter } from "@/components/site-footer";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
@@ -13,7 +13,8 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
-  const wardrobe = await getWardrobeContext(supabase);
+  let wardrobe = await getWardrobeContext(supabase);
+  if (!wardrobe) wardrobe = await ensureOwnWardrobe(supabase, user.id);
 
   return (
     <>
