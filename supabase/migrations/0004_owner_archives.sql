@@ -83,3 +83,5 @@ drop policy if exists "wardrobes: owner update" on public.wardrobes;
 create policy "wardrobes: owner update" on public.wardrobes
   for update using (owner_id = auth.uid())
   with check (owner_id = auth.uid());
+
+notify pgrst, 'reload schema';
