@@ -58,7 +58,9 @@ export async function ensureOwnWardrobe(supabase: SupabaseClient, userId: string
     .insert({ owner_id: userId, name: "My archive" })
     .select("id, owner_id, name")
     .single();
-  if (error || !data) throw new Error("Could not create your wardrobe.");
+  if (error || !data) {
+    throw new Error(`Could not create your archive: ${error?.message ?? "the wardrobe row was not returned"}`);
+  }
   return { id: data.id, role: "owner", ownerId: data.owner_id, name: data.name };
 }
 

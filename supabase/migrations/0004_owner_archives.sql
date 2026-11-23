@@ -60,3 +60,26 @@ create trigger users_create_owner_archive
 
 grant usage on schema public to authenticated;
 grant select, insert, update, delete on public.wardrobes to authenticated;
+
+alter table public.wardrobes enable row level security;
+
+drop policy if exists "wardrobes: members select" on public.wardrobes;
+create policy "wardrobes: members select" on public.wardrobes
+  for select using (
+    owner_id = auth.uid()
+    or exists (
+      select 1
+      from public.wardrobe_members m
+      where m.wardrobe_id = wardrobes.id
+        and m.user_id = auth.uid()
+    )
+  );
+
+drop policy if exists "wardrobes: owner insert" on public.wardrobes;
+create policy "wardrobes: owner insert" on public.wardrobes
+  for insert with check (owner_id = auth.uid());
+
+drop policy if exists "wardrobes: owner update" on public.wardrobes;
+create policy "wardrobes: owner update" on public.wardrobes
+  for update using (owner_id = auth.uid())
+  with check (owner_id = auth.uid());
